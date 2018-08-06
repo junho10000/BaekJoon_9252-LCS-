@@ -1,8 +1,27 @@
 #include <iostream>
+#include <algorithm>
 #include <string>
 #include <vector>
 #include <cmath>
 using namespace std;
+
+bool isLeft(int **maxLength, int X, int Y)
+{
+	if (maxLength[X][Y] == maxLength[X][Y - 1])
+	{
+		return true;
+	}
+	return false;
+}
+
+bool isTop(int **maxLength, int X, int Y)
+{
+	if (maxLength[X][Y] == maxLength[X-1][Y])
+	{
+		return true;
+	}
+	return false;
+}
 
 int main()
 {
@@ -13,17 +32,12 @@ int main()
 	getline(cin, firstString, '\n');
 	getline(cin, secondString, '\n');
 
-	//+1 => maxLength[0] = 0 not count
-	//		maxLength[-][0] = 0 not count
-	/*vector<vector<int>> maxLength(firstString.size()+1, vector<int>(secondString.size()+1, 0));
-	vector<vector <string>> maxString(firstString.size() + 1, vector<string>(secondString.size() + 1, ""));*/
+	/*vector<vector<int>> maxLength(firstString.size()+1, vector<int>(secondString.size()+1, 0));*/
 
 	int **maxLength = new int *[firstString.size() + 1];
-	string **maxString = new string *[firstString.size() + 1];
 	for (int i = 0; i <= firstString.size(); i++)
 	{
 		maxLength[i] = new int[secondString.size() + 1];
-		maxString[i] = new string[secondString.size() + 1];
 	}
 
 	for (int i = 0; i <= firstString.size(); i++)
@@ -31,9 +45,9 @@ int main()
 		for (int j = 0; j <= secondString.size(); j++)
 		{
 			maxLength[i][j] = 0;
-			maxString[i][j] = "";
 		}
 	}
+
 		
 	for (int i = 1; i <= firstString.size(); i++)
 	{
@@ -42,50 +56,46 @@ int main()
 			if (firstString.at(i-1) == secondString.at(j-1))
 			{
 				maxLength[i][j] = maxLength[i - 1][j - 1] + 1;
-				maxString[i][j] = maxString[i - 1][j - 1] + firstString.at(i - 1);
 				//cout << maxString[i][j] << endl;
 			}
 			else
 			{
 				maxLength[i][j] = fmax(maxLength[i - 1][j], maxLength[i][j - 1]);
-				if (maxString[i - 1][j].length() > maxString[i][j - 1].length())
-				{
-					maxString[i][j] = maxString[i - 1][j];
-				}
-				else
-				{
-					maxString[i][j] = maxString[i][j - 1];
-				}
 			}
 		}
-	}
-	for (int i = 0; i <= firstString.size(); i++)
-	{
-		for (int j = 0; j <= secondString.size(); j++)
-		{
-			cout << maxLength[i][j] << " ";
-		}
-		cout << endl;
+
 	}
 
 	cout << maxLength[firstString.size()][secondString.size()] << endl;
-	cout << maxString[firstString.size()][secondString.size()] << endl;
 	
-	/*for (int i = 0; i <= firstString.size(); i++)
+	int X = firstString.size();
+	int Y = secondString.size();
+	int temp = maxLength[firstString.size()][secondString.size()];
+	string resString = "";
+	while (temp != 0)
 	{
-		vector<int>().swap(maxLength[i]);
-		vector<string>().swap(maxString[i]);
+		if (!isLeft(maxLength, X, Y) && !isTop(maxLength, X, Y))
+		{
+			temp = maxLength[X - 1][Y - 1];
+			resString += firstString.at(X - 1); //because maxLength size is bigger than firstString size
+			X -= 1;
+			Y -= 1;
+		}
+		else if (isLeft(maxLength, X, Y))
+		{
+			temp = maxLength[X][Y - 1];
+			Y -= 1;
+		}
+		else if (isTop(maxLength, X, Y))
+		{
+			temp = maxLength[X - 1][Y];
+			X -= 1;
+		}
 	}
-	vector<vector<int>>().swap(maxLength);
-	vector<vector<string>>().swap(maxString);*/
-	//cout << maxLength.capacity() << endl;
-
-
+	reverse(resString.begin(), resString.end());
+	cout << resString << endl;
 	for (int i = 0; i <= firstString.size(); i++)
 	{
-		//free(maxLength[i]);
-		//free(maxString[i]);
-		delete[] maxString[i];
 		delete[] maxLength[i];
 	}
 
