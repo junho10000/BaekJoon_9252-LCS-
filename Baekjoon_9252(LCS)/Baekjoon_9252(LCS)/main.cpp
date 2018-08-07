@@ -32,8 +32,9 @@ int main()
 	getline(cin, firstString, '\n');
 	getline(cin, secondString, '\n');
 
-	/*vector<vector<int>> maxLength(firstString.size()+1, vector<int>(secondString.size()+1, 0));*/
-
+	/*
+		initialize maxLength
+	*/
 	int **maxLength = new int *[firstString.size() + 1];
 	for (int i = 0; i <= firstString.size(); i++)
 	{
@@ -48,6 +49,9 @@ int main()
 		}
 	}
 
+	/*
+		calculate the maxLength
+	*/
 		
 	for (int i = 1; i <= firstString.size(); i++)
 	{
@@ -56,7 +60,6 @@ int main()
 			if (firstString.at(i-1) == secondString.at(j-1))
 			{
 				maxLength[i][j] = maxLength[i - 1][j - 1] + 1;
-				//cout << maxString[i][j] << endl;
 			}
 			else
 			{
@@ -68,6 +71,10 @@ int main()
 
 	cout << maxLength[firstString.size()][secondString.size()] << endl;
 	
+	/*
+		follow the maxLength's index 
+	*/
+
 	int X = firstString.size();
 	int Y = secondString.size();
 	int temp = maxLength[firstString.size()][secondString.size()];
